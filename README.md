@@ -1,5 +1,5 @@
 Kill processes *selectively* by matching any part of the name.
 
-[![asciicast](https://raw.githubusercontent.com/Kraymer/bulkdata/master/ezkill/demo.png)](https://asciinema.org/a/1ubhk2m659a0fatn4qn3nc5h9)
+[![asciicast](https://asciinema.org/a/5dxi20xzerjxhw2fn1tdhqi47.png)](https://asciinema.org/a/5dxi20xzerjxhw2fn1tdhqi47)
 
 ezkill hits the sweet spot between laborious *kill by pid* technique and indiscriminate mass processes butchery (`pkill -f`).
