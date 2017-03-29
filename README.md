@@ -1,4 +1,4 @@
-Like `pkill -f` with a confirmation prompt.
+Kill processes *selectively* by matching any part of the name.
 
 [![asciicast](https://raw.githubusercontent.com/Kraymer/bulkdata/master/ezkill/demo.png)](https://asciinema.org/a/1ubhk2m659a0fatn4qn3nc5h9)
 
