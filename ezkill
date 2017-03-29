@@ -1,0 +1,22 @@
+#!/bin/bash
+
+mapfile -t ps_grep_lines < <( ps -eo pid,command | grep $1 | grep -v $0 )
+
+LINE_IDX=a
+for line in "${ps_grep_lines[@]}"
+do
+  cmd=`echo ${line} | cut -f 2-99 -d " " | cut -c 1-128`
+  echo ${LINE_IDX}"]" "${cmd}"
+  # alpha increment
+  LINE_IDX=$(echo "$LINE_IDX" | tr "0-9a-z" "1-9a-z_")
+done
+echo " "
+read -p "Which command(s) to kill? " cmd_ids
+for (( i=0; i<${#cmd_ids}; i++ )); do
+    ascii_cmd_id=`printf "${cmd_ids:$i:1}" | od -A n -t d1`
+    idx=`expr $ascii_cmd_id - 97`
+    pid=`echo ${ps_grep_lines[$idx]} | cut -f 1 -d " "`
+    cmd=`echo ${ps_grep_lines[$idx]} | cut -f 2 -d " "`
+    kill $pid
+    echo "killed" $cmd "(pid" $pid")"
+done
