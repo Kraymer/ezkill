@@ -17,6 +17,7 @@ EOF
 }
 
 ezkill() {
+    killargs=${@:1:$#-1}  # all args but last
     while IFS= read -r line; do
         ps_grep_lines+=("$line")
     done < <( ps -eo pid,command | grep "${@: -1}" | grep -v "$0" )
@@ -37,7 +38,7 @@ ezkill() {
         idx=`expr $ascii_cmd_id - 97`
         pid=`echo ${ps_grep_lines[$idx]} | cut -f 1 -d " "`
         cmd=`echo ${ps_grep_lines[$idx]} | cut -f 2 -d " "`
-        kill $pid
+        kill $killargs $pid
         echo "killed" $cmd "(pid" $pid")"
     done
 }
