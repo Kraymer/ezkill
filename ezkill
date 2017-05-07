@@ -1,7 +1,12 @@
 #!/bin/bash
 
+# Copyright (c) 2017 Fabrice Laporte - kray.me
+# The MIT License http://www.opensource.org/licenses/mit-license.php
+
+# ezkill
+# Kill processes selectively by matching any part of the name.
+
 readonly PROGNAME=$(basename $0)
-readonly ARGS="$@"
 
 usage() {
     cat << EOF
@@ -16,6 +21,10 @@ USAGE: $PROGNAME [-s signal_name] pattern
 EOF
 }
 
+# Print array elements, one per line, prefixed by a letter identifier from a to z.
+# Alternate lines background colours for best readability.
+#
+# $@ - array to print
 print_alternate()
 {
     ps_grep_lines=("$@")
@@ -59,10 +68,10 @@ ezkill() {
 
 
 main() {
-    if [ "$#" -eq 0 ] || [ "${ARGS:0}" == "-h" ]; then
+    if [ "$#" -eq 0 ] || [ "${@:0}" == "-h" ]; then
       usage
       exit 0
     fi
-    ezkill $ARGS
+    ezkill $@
 }
 main $@
