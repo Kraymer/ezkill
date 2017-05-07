@@ -32,6 +32,10 @@ print_alternate()
         ((i % 2 != 0)) && printf "${CTRL_REVERSE}${LINE_IDX}${CTRL_RESET}" 
         echo " ${cmd}"
         LINE_IDX=$(echo "$LINE_IDX" | tr "0-9a-z" "1-9a-z_")  # alpha increment
+        if [ $i -eq 25 ]; then
+            echo '...'
+            break
+        fi
     done
 }
 
