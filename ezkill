@@ -3,6 +3,19 @@
 readonly PROGNAME=$(basename $0)
 readonly ARGS="$@"
 
+usage() {
+    cat << EOF
+USAGE: $PROGNAME [-s signal_name] pattern
+
+    $PROGNAME searches the process table on the running system and lists identifiers for all
+    processes that match the criteria given on the command line.
+    It then prompt you for which processes to signal.   
+
+    OPTIONS:
+        see 'kill' USAGE
+EOF
+}
+
 ezkill() {
     while IFS= read -r line; do
         ps_grep_lines+=("$line")
@@ -31,6 +44,10 @@ ezkill() {
 
 
 main() {
+    if [ "${#ARGS[@]}" -eq 1 ] || ["${ARGS:0}" == "-h" ]; then
+      usage
+      exit 0
+    fi
     ezkill $ARGS
 }
 main
