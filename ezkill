@@ -45,10 +45,10 @@ ezkill() {
 
 
 main() {
-    if [ "${#ARGS[@]}" -eq 1 ] || ["${ARGS:0}" == "-h" ]; then
+    if [ "$#" -eq 0 ] || [ "${ARGS:0}" == "-h" ]; then
       usage
       exit 0
     fi
     ezkill $ARGS
 }
-main
+main $@
