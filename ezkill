@@ -16,23 +16,33 @@ USAGE: $PROGNAME [-s signal_name] pattern
 EOF
 }
 
+print_alternate()
+{
+    ps_grep_lines=("$@")
+    if [ ${#ps_grep_lines[@]} -eq 0 ]; then
+        echo "No processes found."
+        exit 0
+    fi
+    CTRL_REVERSE="\e[7m"
+    CTRL_RESET="\e[27m"
+    LINE_IDX=a
+    for ((i = 0; i < ${#ps_grep_lines[@]}; ++i)); do  # print matching processes with alternate bkg color
+        cmd=`echo ${ps_grep_lines[$i]} | cut -f 2-99 -d " " | cut -c 1-128`
+        ((i % 2 == 0)) && printf "${LINE_IDX}" 
+        ((i % 2 != 0)) && printf "${CTRL_REVERSE}${LINE_IDX}${CTRL_RESET}" 
+        echo " ${cmd}"
+        LINE_IDX=$(echo "$LINE_IDX" | tr "0-9a-z" "1-9a-z_")  # alpha increment
+    done
+}
+
 ezkill() {
     killargs=${@:1:$#-1}  # all args but last
     while IFS= read -r line; do
         ps_grep_lines+=("$line")
     done < <( ps -eo pid,command | grep "${@: -1}" | grep -v "$0" )
-    CTRL_REVERSE="\e[7m"
-    CTRL_RESET="\e[27m"
-    LINE_IDX=a
-    for ((i = 0; i < ${#ps_grep_lines[@]}; ++i)); do  # print matching processes with alternate bkg color
-      cmd=`echo ${ps_grep_lines[$i]} | cut -f 2-99 -d " " | cut -c 1-128`
-      ((i % 2 == 0)) && printf "${LINE_IDX}" 
-      ((i % 2 != 0)) && printf "${CTRL_REVERSE}${LINE_IDX}${CTRL_RESET}" 
-      echo " ${cmd}"
-      LINE_IDX=$(echo "$LINE_IDX" | tr "0-9a-z" "1-9a-z_")  # alpha increment
-    done
+    print_alternate "${ps_grep_lines[@]:1}"  # remove first element which is our own grep
     echo " "
-    read -p "Which command(s) to kill? " cmd_ids
+    read -p "Send signal to process(es): " cmd_ids
     for (( i=0; i<${#cmd_ids}; i++ )); do
         ascii_cmd_id=`printf "${cmd_ids:$i:1}" | od -A n -t d1`
         idx=`expr $ascii_cmd_id - 97`
