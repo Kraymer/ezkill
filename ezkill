@@ -35,7 +35,7 @@ print_alternate()
     CTRL_REVERSE="\e[7m"
     CTRL_RESET="\e[27m"
     LINE_IDX=a
-    for ((i = 0; i < ${#ps_grep_lines[@]}; ++i)); do  # print matching processes with alternate bkg color
+    for ((i = 0; i < ${#ps_grep_lines[@]}; ++i)); do  
         cmd=`echo ${ps_grep_lines[$i]} | cut -f 2-99 -d " " | cut -c 1-128`
         ((i % 2 == 0)) && printf "${LINE_IDX}" 
         ((i % 2 != 0)) && printf "${CTRL_REVERSE}${LINE_IDX}${CTRL_RESET}" 
@@ -52,8 +52,9 @@ ezkill() {
     killargs=${@:1:$#-1}  # all args but last
     while IFS= read -r line; do
         ps_grep_lines+=("$line")
-    done < <( ps -eo pid,command | grep "${@: -1}" | grep -v "$0" )
-    print_alternate "${ps_grep_lines[@]:1}"  # remove first element which is our own grep
+    done < <( ps -eo pid,command | grep -e "${@: -1}" | grep -v "$0" )
+    unset "ps_grep_lines[${#ps_grep_lines[@]}-1]"  # remove last element which is our own grep
+    print_alternate "${ps_grep_lines[@]}"  
     echo " "
     read -p "Send signal to process(es): " cmd_ids
     for (( i=0; i<${#cmd_ids}; i++ )); do
