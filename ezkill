@@ -14,7 +14,7 @@ USAGE: $PROGNAME [-s signal_name] pattern
 
     $PROGNAME searches the process table on the running system and lists identifiers for all
     processes that match the criteria given on the command line.
-    It then prompt you for which processes to signal.   
+    It then prompt you for which processes to signal.
 
     OPTIONS:
         see 'kill' USAGE
@@ -35,10 +35,10 @@ print_alternate()
     CTRL_REVERSE="\e[7m"
     CTRL_RESET="\e[27m"
     LINE_IDX=a
-    for ((i = 0; i < ${#ps_grep_lines[@]}; ++i)); do  
+    for ((i = 0; i < ${#ps_grep_lines[@]}; ++i)); do
         cmd=`echo ${ps_grep_lines[$i]} | cut -f 2-99 -d " " | cut -c 1-128`
-        ((i % 2 == 0)) && printf "${LINE_IDX}" 
-        ((i % 2 != 0)) && printf "${CTRL_REVERSE}${LINE_IDX}${CTRL_RESET}" 
+        ((i % 2 == 0)) && printf "${LINE_IDX}"
+        ((i % 2 != 0)) && printf "${CTRL_REVERSE}${LINE_IDX}${CTRL_RESET}"
         echo " ${cmd}"
         LINE_IDX=$(echo "$LINE_IDX" | tr "0-9a-z" "1-9a-z_")  # alpha increment
         if [ $i -eq 25 ]; then
@@ -54,7 +54,7 @@ ezkill() {
         ps_grep_lines+=("$line")
     done < <( ps -eo pid,command | grep -e "${@: -1}" | grep -v "$0" )
     unset "ps_grep_lines[${#ps_grep_lines[@]}-1]"  # remove last element which is our own grep
-    print_alternate "${ps_grep_lines[@]}"  
+    print_alternate "${ps_grep_lines[@]}"
     echo " "
     read -p "Send signal to process(es): " cmd_ids
     for (( i=0; i<${#cmd_ids}; i++ )); do
@@ -69,7 +69,7 @@ ezkill() {
 
 
 main() {
-    if [ "$#" -eq 0 ] || [ "${@:0}" == "-h" ]; then
+    if [ "$#" -eq 0 ] || [ "$1" == "-h" ]; then
       usage
       exit 0
     fi
