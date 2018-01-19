@@ -1,3 +1,5 @@
+# :question::gun: ezkill
+
 Kill processes *selectively* by matching any part of the name.  
 `ezkill` hits the sweet spot between laborious *`kill` by pid* technique and indiscriminate `pkill -f` mass processes butchery.
 
