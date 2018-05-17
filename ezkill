@@ -7,6 +7,7 @@
 # Kill processes selectively by matching any part of the name.
 
 readonly PROGNAME=$(basename $0)
+CHOICES=  # used for print_alternate() return value
 
 usage() {
     cat << EOF
@@ -35,7 +36,8 @@ print_alternate()
     CTRL_REVERSE="\e[7m"
     CTRL_RESET="\e[27m"
     LINE_IDX=a
-    for ((i = 0; i < ${#ps_grep_lines[@]}; ++i)); do
+    for ((i = 0; i < ${#ps_grep_lines[@]}; ++i)); do  
+        CHOICES+="${LINE_IDX}"
         cmd=`echo ${ps_grep_lines[$i]} | cut -f 2-99 -d " " | cut -c 1-128`
         ((i % 2 == 0)) && printf "${LINE_IDX}"
         ((i % 2 != 0)) && printf "${CTRL_REVERSE}${LINE_IDX}${CTRL_RESET}"
@@ -52,10 +54,13 @@ ezkill() {
     killargs=${@:1:$#-1}  # all args but last
     while IFS= read -r line; do
         ps_grep_lines+=("$line")
-    print_alternate "${ps_grep_lines[@]}"
     done < <( ps -eo pid,command | sort | grep -e "${@: -1}" | grep -v "$0" | grep -v "grep -e" )
+    print_alternate "${ps_grep_lines[@]}"  
     echo " "
     read -p "Send signal to process(es): " cmd_ids
+    if [ "$cmd_ids" == "*" ]; then
+        cmd_ids=$CHOICES
+    fi
     for (( i=0; i<${#cmd_ids}; i++ )); do
         ascii_cmd_id=`printf "${cmd_ids:$i:1}" | od -A n -t d1`
         idx=`expr $ascii_cmd_id - 97`
