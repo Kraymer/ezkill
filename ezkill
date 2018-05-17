@@ -52,9 +52,8 @@ ezkill() {
     killargs=${@:1:$#-1}  # all args but last
     while IFS= read -r line; do
         ps_grep_lines+=("$line")
-    done < <( ps -eo pid,command | grep -e "${@: -1}" | grep -v "$0" )
-    unset "ps_grep_lines[${#ps_grep_lines[@]}-1]"  # remove last element which is our own grep
     print_alternate "${ps_grep_lines[@]}"
+    done < <( ps -eo pid,command | sort | grep -e "${@: -1}" | grep -v "$0" | grep -v "grep -e" )
     echo " "
     read -p "Send signal to process(es): " cmd_ids
     for (( i=0; i<${#cmd_ids}; i++ )); do
