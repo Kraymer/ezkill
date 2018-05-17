@@ -7,7 +7,7 @@ Kill processes *selectively* by matching any part of the name.
 
     ezkill [kill OPTIONS] PATTERN
 
-[![asciicast](https://asciinema.org/a/5dxi20xzerjxhw2fn1tdhqi47.png)](https://asciinema.org/a/5dxi20xzerjxhw2fn1tdhqi47)
+[![asciicast](https://asciinema.org/a/s6QX6XixcZP8ijiE1euWwGeHr.png)](https://asciinema.org/a/s6QX6XixcZP8ijiE1euWwGeHr)
 
 
 #### :octocat: *Nota Bene*
