@@ -1,3 +1,6 @@
+![GitHub tag](https://img.shields.io/github/tag/kraymer/ezkill.svg?style=plastic) [![](https://img.shields.io/badge/rss-subscribe-orange.svg)](https://github.com/Kraymer/ezkill/releases.atom)
+
+
 # ezkill :question::gun:
 
 Kill processes *selectively* by matching any part of the name.  
